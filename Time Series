@@ -1,0 +1,30 @@
+from dash import Dash, dcc, html, Input, Output
+import plotly.express as px
+
+app = Dash(__name__)
+
+
+app.layout = html.Div([
+    html.H4('Insert Name of Graph Here'),
+    dcc.Graph(id="time-series-x-time-series-chart"),
+    html.P("Select Text:"),
+    dcc.Dropdown(
+        id="time-series-x-pick",
+        options=["Option 1", "Option 2", "Option 3"],
+        value="Option 1",
+        clearable=False,
+    ),
+])
+
+
+@app.callback(
+    Output("time-series-x-time-series-chart", "figure"), 
+    Input("time-series-x-pick", "value"))
+def display_time_series(pick):
+    df = px.data.source() # replace with your own data source
+    fig = px.line(df, x='date', y=pick)
+    return fig
+
+
+if __name__ == "__main__":
+    app.run_server(debug=True)
